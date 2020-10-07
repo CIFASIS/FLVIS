@@ -60,7 +60,7 @@ catkin_package(
     )
 
 
-include_directories(SYSTEM
+include_directories(
     ${catkin_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
     ${G2O_INCLUDE_DIRS}
