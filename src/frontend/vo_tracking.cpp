@@ -146,10 +146,14 @@ private:
             cam_type=DEPTH_D435;
             imu_type=PIXHAWK;
         }
+        if(vi_type_from_yaml==3)
+        {
+            cam_type=STEREO_D435;
+            imu_type=D435I;
+        }
         if(cam_type==DEPTH_D435)
         {
             Mat4x4  mat_imu_cam  = Mat44FromYaml(configFilePath,"T_imu_cam0");
-            //            cout << "Mat_imu_cam0 :" << endl << mat_imu_cam << endl;
             cam_tracker->init(image_width,
                               image_height,
                               cam0_cameraMatrix,
@@ -157,8 +161,26 @@ private:
                               SE3(mat_imu_cam.topLeftCorner(3,3),mat_imu_cam.topRightCorner(3,1)),
                               f_para,
                               vi_para);
-            img0_sub.subscribe(nh, "/vo/image", 1);
-            img1_sub.subscribe(nh, "/vo/depth_image", 1);
+        }
+        if(cam_type==STEREO_D435)
+        {
+            cv::Mat cam1_cameraMatrix = cameraMatrixFromYamlIntrinsics(configFilePath,"cam1_intrinsics");
+            cv::Mat cam1_distCoeffs   = distCoeffsFromYaml(configFilePath,"cam1_distortion_coeffs");
+            Mat4x4  mat_imu_cam  = Mat44FromYaml(configFilePath,"T_imu_cam0");
+            SE3 T_i_c0 = SE3(mat_imu_cam.topLeftCorner(3,3),
+                             mat_imu_cam.topRightCorner(3,1));
+            Mat4x4  mat_cam0_cam1  = Mat44FromYaml(configFilePath,"T_cam0_cam1");
+            SE3 T_c0_c1 = SE3(mat_cam0_cam1.topLeftCorner(3,3),
+                              mat_cam0_cam1.topRightCorner(3,1));
+            cam_tracker->init(image_width,image_height,
+                              cam0_cameraMatrix,cam0_distCoeffs,
+                              T_i_c0,
+                              f_para,
+                              vi_para,
+                              STEREO_D435,
+                              1.0,
+                              cam1_cameraMatrix,cam1_distCoeffs,
+                              T_c0_c1);
         }
         if(cam_type==STEREO_EuRoC_MAV)
         {
@@ -174,10 +196,6 @@ private:
             Mat4x4  mat_i_mavimu  = Mat44FromYaml(configFilePath,"T_imu_mavimu");
             SE3 T_i_mavi = SE3(mat_i_mavimu.topLeftCorner(3,3),mat_i_mavimu.topRightCorner(3,1));
             SE3 T_i_c0 = T_i_mavi*T_mavi_c0;
-            //            cout << "cam1_cameraMatrix:" << endl << cam1_cameraMatrix << endl;
-            //            cout << "cam1_distCoeffs  :" << endl << cam1_distCoeffs << endl;
-            //            cout << "Mat_camimu_cam0 :" << endl << mat_mavimu_cam0 << endl;
-            //            cout << "Mat_camimu_cam1 :" << endl << mat_mavimu_cam1 << endl;
             cam_tracker->init(image_width,image_height,
                               cam0_cameraMatrix,cam0_distCoeffs,
                               T_i_c0,
@@ -187,10 +205,9 @@ private:
                               1.0,
                               cam1_cameraMatrix,cam1_distCoeffs,
                               T_c0_c1);
-            img0_sub.subscribe(nh, "/vo/image0", 1);
-            img1_sub.subscribe(nh, "/vo/image1", 1);
         }
-
+        img0_sub.subscribe(nh, "/vo/input_image_0", 1);
+        img1_sub.subscribe(nh, "/vo/input_image_1", 1);
         correction_inf_sub = nh.subscribe<flvis::CorrectionInf>(
                     "/vo_localmap_feedback",
                     1,
@@ -201,8 +218,6 @@ private:
                     boost::bind(&TrackingNodeletClass::imu_callback, this, _1));
         exactSync_ = new message_filters::Synchronizer<MyExactSyncPolicy>(MyExactSyncPolicy(2), img0_sub, img1_sub);
         exactSync_->registerCallback(boost::bind(&TrackingNodeletClass::image_input_callback, this, _1, _2));
-
-
         cout << "start tracking thread" << endl;
     }
 
@@ -311,7 +326,7 @@ private:
                 drawFrame(img0_vis,*this->cam_tracker->curr_frame,1,6);
                 visualizeDepthImg(img1_vis,*this->cam_tracker->curr_frame);
             }
-            if(cam_type==STEREO_EuRoC_MAV)
+            if(cam_type==STEREO_EuRoC_MAV || cam_type==STEREO_D435)
             {
                 drawFrame(img0_vis,*this->cam_tracker->curr_frame,1,11);
                 cvtColor(cam_tracker->curr_frame->img1,img1_vis,CV_GRAY2BGR);

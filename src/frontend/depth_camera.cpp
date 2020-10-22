@@ -18,7 +18,8 @@ void DepthCamera::setSteroCamInfo(const cv::Mat K0_in,      const cv::Mat D0_in,
                                   const cv::Mat K0_rect_in, const cv::Mat D0_rect_in, const cv::Mat R0_in, const cv::Mat P0_in,
                                   const cv::Mat K1_in,      const cv::Mat D1_in,
                                   const cv::Mat K1_rect_in, const cv::Mat D1_rect_in, const cv::Mat R1_in, const cv::Mat P1_in,
-                                  const SE3 T_c0_c1_in)
+                                  const SE3 T_c0_c1_in,
+                                  const enum TYPEOFCAMERA cam_type_in)
 {
     this->K0=K0_in;
     this->D0=D0_in;
@@ -70,7 +71,7 @@ void DepthCamera::setSteroCamInfo(const cv::Mat K0_in,      const cv::Mat D0_in,
     K0_ << cam0_fx,0,cam0_cx,0,cam0_fy,cam0_cy,0,0,1;
     K1_ << cam1_fx,0,cam1_cx,0,cam1_fy,cam1_cy,0,0,1;
 
-    cam_type = STEREO_EuRoC_MAV;
+    cam_type = cam_type_in;
 }
 
 Vec3 DepthCamera::world2cameraT_c_w ( const Vec3& p_w, const SE3& T_c_w )

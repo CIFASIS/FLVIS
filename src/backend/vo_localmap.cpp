@@ -389,7 +389,8 @@ private:
         if(vi_type_from_yaml==0) cam_type=DEPTH_D435;
         if(vi_type_from_yaml==1) cam_type=STEREO_EuRoC_MAV;
         if(vi_type_from_yaml==2) cam_type=DEPTH_D435;
-        if(cam_type==DEPTH_D435)
+        if(vi_type_from_yaml==3) cam_type=STEREO_D435;
+        if(cam_type==DEPTH_D435 || STEREO_D435)
         {
             cv::Mat K0 = cameraMatrixFromYamlIntrinsics(configFilePath,"cam0_intrinsics");
             cv::Mat D0   = distCoeffsFromYaml(configFilePath,"cam0_distortion_coeffs");

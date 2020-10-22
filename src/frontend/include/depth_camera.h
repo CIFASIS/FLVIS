@@ -4,8 +4,10 @@
 #include "include/common.h"
 
 
-enum TYPEOFCAMERA{DEPTH_D435,
-                  STEREO_EuRoC_MAV};
+enum TYPEOFCAMERA{STEREO_D435,
+                  STEREO_EuRoC_MAV,
+                  DEPTH_D435
+                 };
 //DepthCamera Class
 //Support Z16 Depth Format (RealSense d435, d435i)
 //Support Stero Camera
@@ -53,7 +55,8 @@ public:
                          const cv::Mat K0_rect_in, const cv::Mat D0_rect_in, const cv::Mat R0_in, const cv::Mat P0_in,
                          const cv::Mat K1_in,      const cv::Mat D1_in,
                          const cv::Mat K1_rect_in, const cv::Mat D1_rect_in, const cv::Mat R1_in, const cv::Mat P1_in,
-                         const SE3 T_c0_c1_in);
+                         const SE3 T_c0_c1_in,
+                         const enum TYPEOFCAMERA cam_type_in);
 
 private:
 

@@ -17,6 +17,7 @@ void OptimizeInFrame::optimize(CameraFrame &frame)
     vector<LandMarkInFrame> lms_in_frame;
     frame.getValidInliersPair(lms_in_frame);
 //    cout << lms_in_frame.size() << "|" << frame.landmarks.size() << endl;
+//    SE3 pose_befor_ba = frame.T_c_w;
     if(lms_in_frame.size()<10)
     {
         return;
@@ -70,6 +71,10 @@ void OptimizeInFrame::optimize(CameraFrame &frame)
                 optimizer.removeEdge(e);
                 e->id();
             }
+        }
+        if(optimizer.edges().size()<10)
+        {
+            return;
         }
         optimizer.initializeOptimization();
         optimizer.optimize(2);

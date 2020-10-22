@@ -21,13 +21,12 @@ void F2FTracking::init(const int w, const int h,
     curr_frame->height = last_frame->height = h;
     curr_frame->width = last_frame->width = w;
     this->cam_type = cam_type_in;
+    DepthCamera dc;
     switch (this->cam_type)
     {
     case DEPTH_D435:
-    {
         K0_rect = c0_cameraMatrix_in;
         D0_rect = c0_distCoeffs_in;
-        DepthCamera dc;
         dc.setDepthCamInfo(K0_rect.at<double>(0,0),//fx
                            K0_rect.at<double>(1,1),//fy
                            K0_rect.at<double>(0,2),//cx
@@ -35,8 +34,8 @@ void F2FTracking::init(const int w, const int h,
                            1000.0);
         d_camera = lkorb_tracker->d_camera = curr_frame->d_camera = last_frame->d_camera = dc;
         break;
-    }
-    case STEREO_EuRoC_MAV:{
+    case STEREO_D435:
+    case STEREO_EuRoC_MAV:
         K0 = c0_cameraMatrix_in;
         D0 = c0_distCoeffs_in;
         K1 = c1_cameraMatrix_in;
@@ -60,13 +59,12 @@ void F2FTracking::init(const int w, const int h,
                                     c1_RM[0],c1_RM[1]);
         K0_rect = P0.rowRange(0,3).colRange(0,3);
         K1_rect = P1.rowRange(0,3).colRange(0,3);
-        DepthCamera dc;
         dc.setSteroCamInfo(K0, D0, K0_rect, D0_rect, R0, P0,
                            K1, D1, K1_rect, D1_rect, R1, P1,
-                           T_c0_c1);
+                           T_c0_c1,this->cam_type);
         d_camera = lkorb_tracker->d_camera = curr_frame->d_camera = last_frame->d_camera = dc;
         break;
-    }
+
     }
     this->frameCount = 0;
     this->vo_tracking_state = UnInit;
@@ -145,10 +143,15 @@ void F2FTracking::image_feed(const double time,
         curr_frame->img0=img0_in;
         curr_frame->d_img=img1_in;
         if(frameCount<50) return;
-        //cv::equalizeHist(curr_frame->img0,curr_frame->img0);
         break;
     }
-
+    case STEREO_D435:
+    {
+        curr_frame->img0=img0_in;
+        curr_frame->img1=img1_in;
+        if(frameCount<50) return;
+        break;
+    }
     case STEREO_EuRoC_MAV:
     {
         curr_frame->img0=img0_in;
@@ -190,7 +193,6 @@ void F2FTracking::image_feed(const double time,
             {
                 break;
             }
-
         }
         if(this->init_frame())
         {
@@ -298,16 +300,13 @@ void F2FTracking::image_feed(const double time,
         switch(this->cam_type)
         {
         case DEPTH_D435:
-        {
             pts2d_undistort = pts2d;
             break;
-        }
+        case STEREO_D435:
         case STEREO_EuRoC_MAV:
-        {
             cv::undistortPoints(pts2d,pts2d_undistort,
                                 d_camera.K0,d_camera.D0,d_camera.R0,d_camera.P0);
             break;
-        }
         }
         bool add_as_inliers=false;
         if(orig_size<60)
@@ -415,7 +414,6 @@ bool F2FTracking::init_frame()
     switch (this->cam_type)
     {
     case DEPTH_D435:
-    {
         for(size_t i=0; i<pts2d.size(); i++)
         {
             curr_frame->landmarks.push_back(LandMarkInFrame(Vec2(pts2d.at(i).x,
@@ -427,8 +425,8 @@ bool F2FTracking::init_frame()
                                                             curr_frame->T_c_w));
         }
         break;
-    }
-    case STEREO_EuRoC_MAV:{
+    case STEREO_D435:
+    case STEREO_EuRoC_MAV:
         vector<cv::Point2f> pts2d_undistort;
         cv::undistortPoints(pts2d,pts2d_undistort,
                             d_camera.K0,d_camera.D0,d_camera.R0,d_camera.P0);
@@ -443,7 +441,7 @@ bool F2FTracking::init_frame()
                                                             curr_frame->T_c_w));
         }
         break;
-    }
+
     }
     curr_frame->depthInnovation();
     curr_frame->eraseNoDepthPoint();

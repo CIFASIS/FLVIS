@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /flvis1
+        - /flvis1/LC_VO1
       Splitter Ratio: 0.550000011920929
     Tree Height: 514
   - Class: rviz/Views
@@ -113,7 +114,7 @@ Visualization Manager:
           Marker Topic: /vo_curr_frame
           Name: camera_view
           Namespaces:
-            {}
+            points_and_lines: true
           Queue Size: 100
           Value: true
         - Alpha: 1
@@ -197,7 +198,7 @@ Visualization Manager:
           Radius: 0.029999999329447746
           Shaft Diameter: 0.10000000149011612
           Shaft Length: 0.10000000149011612
-          Topic: /vo_path_lc
+          Topic: /vision_path_lc
           Unreliable: false
           Value: true
       Enabled: true
@@ -230,7 +231,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 15.047286987304688
+      Distance: 6.868762016296387
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -245,10 +246,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7597971558570862
+      Pitch: 0.17479698359966278
       Target Frame: vo_local
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.834871292114258
+      Yaw: 3.0598678588867188
     Saved: ~
 Window Geometry:
   Displays:

@@ -275,7 +275,7 @@ void CameraFrame::depthInnovation(const bool apply_iir)
 
     if(this->d_camera.cam_type==DEPTH_D435){
         this->recover3DPts_c_FromDepthImg(pts3d_c_cam_measure,cam_measure_mask);
-    }else if(this->d_camera.cam_type==STEREO_EuRoC_MAV){
+    }else if(this->d_camera.cam_type==STEREO_EuRoC_MAV || this->d_camera.cam_type==STEREO_D435){
         this->recover3DPts_c_FromStereo(pts3d_c_cam_measure,cam_measure_mask);
     }
 
@@ -283,7 +283,7 @@ void CameraFrame::depthInnovation(const bool apply_iir)
         Vec3 lm_c_measure;
         if(cam_measure_mask.at(i)==false && triangulation_mask.at(i)==false)
         {
-            if(this->d_camera.cam_type==STEREO_EuRoC_MAV)
+            if(this->d_camera.cam_type==STEREO_EuRoC_MAV || this->d_camera.cam_type==STEREO_D435)
             {
                 if(!landmarks.at(i).hasDepthInf())
                 {

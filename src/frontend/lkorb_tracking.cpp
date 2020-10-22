@@ -52,6 +52,7 @@ bool LKORBTracking::tracking(CameraFrame& from,
                 tracked_p2d_plane.at(i) = cv::Point2f(reProj[0],reProj[1]);
             }
             break;
+        case STEREO_D435:
         case STEREO_EuRoC_MAV:
             vector<cv::Point2f> project_to_to_img0_plane;
             cv::Mat r_,t_;
@@ -80,6 +81,7 @@ bool LKORBTracking::tracking(CameraFrame& from,
         from_p2d_undistort = from_p2d_plane;
         tracked_p2d_undistort = tracked_p2d_plane;
         break;
+    case STEREO_D435:
     case STEREO_EuRoC_MAV:
         cv::undistortPoints(tracked_p2d_plane,tracked_p2d_undistort,
                             d_camera.K0,d_camera.D0,d_camera.R0,d_camera.P0);

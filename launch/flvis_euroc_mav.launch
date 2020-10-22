@@ -26,8 +26,8 @@
     <node pkg="nodelet" type="nodelet" args="load flvis/TrackingNodeletClass flvis_nodelet_manager"
           name="TrackingNodeletClass_loader" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ">
         <!-- remap EuRoC_MAV input -->
-        <remap from="/vo/image0" to="/cam0/image_raw" />
-        <remap from="/vo/image1" to="/cam1/image_raw" />
+        <remap from="/vo/input_image_0" to="/cam0/image_raw" />
+        <remap from="/vo/input_image_1" to="/cam1/image_raw" />
         <remap from="/imu" to="/imu0" />
         <!-- remap output -->
         <!--<remap from="imu_pose" to="/mavros/vision_pose/pose"/>-->
