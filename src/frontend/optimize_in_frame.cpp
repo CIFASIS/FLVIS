@@ -7,7 +7,7 @@ OptimizeInFrame::OptimizeInFrame()
 
 }
 
-void OptimizeInFrame::optimize(CameraFrame &frame)
+bool OptimizeInFrame::optimize(CameraFrame &frame)
 {
     //get all landmarks (has depth information and is inliers)
     double fx=frame.d_camera.cam0_fx;
@@ -20,7 +20,7 @@ void OptimizeInFrame::optimize(CameraFrame &frame)
 //    SE3 pose_befor_ba = frame.T_c_w;
     if(lms_in_frame.size()<10)
     {
-        return;
+        return false;
     }
     else {
         typedef g2o::BlockSolver< g2o::BlockSolverTraits<6,3> > Block;
@@ -74,7 +74,7 @@ void OptimizeInFrame::optimize(CameraFrame &frame)
         }
         if(optimizer.edges().size()<10)
         {
-            return;
+            return false;
         }
         optimizer.initializeOptimization();
         optimizer.optimize(2);
@@ -84,6 +84,8 @@ void OptimizeInFrame::optimize(CameraFrame &frame)
 
         //update frame pose
         frame.T_c_w =  SE3(pose.rotation(),pose.translation());
+
+        return true;
 
     }
 }

@@ -273,7 +273,20 @@ void F2FTracking::image_feed(const double time,
         }
 
         //STEP3: In frame BA, remove outliers
-        OptimizeInFrame::optimize(*curr_frame);
+        bool optimize_success = OptimizeInFrame::optimize(*curr_frame);
+        if(!optimize_success)
+        {
+          continus_tracking_fail_cnt++;
+          cout << "[Critical Warning] Tracking Fail-PnP estimation error!" << endl;
+          last_frame.swap(curr_frame);//dummy swap, escape this frame
+          if(continus_tracking_fail_cnt>=2)
+          {
+              vo_tracking_state = TrackingFail;
+              cout << "Tracking failed! Swith to tracking Fail Mode" << endl;
+              continus_tracking_fail_cnt = 0;
+          }
+          break;
+        }
         vector<Vec2> outlier_reproject;
         double mean_reprojection_error;
         curr_frame->calReprjInlierOutlier(mean_reprojection_error,outlier_reproject,1.5);

@@ -28,7 +28,7 @@ class OptimizeInFrame
 {
 public:
     OptimizeInFrame();
-    static void optimize(CameraFrame &frame);
+    static bool optimize(CameraFrame &frame);
 };
 
 #endif // BUNDLEADJUSTMENT_H

@@ -164,14 +164,16 @@ bool LKORBTracking::tracking(CameraFrame& from,
     vector<cv::Point2f> p2d;
     vector<cv::Point3f> p3d;
     to.get2dUndistort3dInlierPair_cvPf(p2d,p3d);
-    if(use_guess){
-        SE3_to_rvec_tvec(T_c_w_guess, r_ , t_ );
-        cv::solvePnPRansac(p3d,p2d,K0_rect,D0_rect,
-                           r_,t_,true,100,3.0,0.99,inliers,cv::SOLVEPNP_ITERATIVE);
-    }else{
-        cv::solvePnPRansac(p3d,p2d,K0_rect,D0_rect,
-                           r_,t_,false,100,3.0,0.99,inliers,cv::SOLVEPNP_P3P);
-    }
+    cv::solvePnPRansac(p3d,p2d,K0_rect,D0_rect,
+                       r_,t_,false,100,3.0,0.99,inliers,cv::SOLVEPNP_P3P);
+//    if(use_guess){
+//        SE3_to_rvec_tvec(T_c_w_guess, r_ , t_ );
+//        cv::solvePnPRansac(p3d,p2d,K0_rect,D0_rect,
+//                           r_,t_,false,100,3.0,0.99,inliers,cv::SOLVEPNP_P3P);
+//    }else{
+//        cv::solvePnPRansac(p3d,p2d,K0_rect,D0_rect,
+//                           r_,t_,false,100,3.0,0.99,inliers,cv::SOLVEPNP_P3P);
+//    }
     //inlier masks
     int pnp_inlier_cnt=0;
     for (int i = 0; i < (int)p2d.size(); i++){
