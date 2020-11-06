@@ -24,11 +24,6 @@ git clone https://github.com/Ttoto/FLVIS.git
 ````
 Install 3rd Part library
 ````
-sudo apt-get install libsuitesparse-dev 
-sudo apt-get install ros-melodic-octomap
-
-````
-````
 cd catkin_ws/src/FLVIS/3rdPartLib/
 ./install3rdPartLib.sh
 ````
