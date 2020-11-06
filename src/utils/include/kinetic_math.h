@@ -50,11 +50,11 @@ inline Vec3 R2rpy(const Matrix3d R)
 {
     Vec3 rpy;
     double roll, pitch, yaw;
-    double r12 = R(0,1);
-    double r22 = R(1,1);
-    double r31 = R(2,0);
-    double r32 = R(2,1);
-    double r33 = R(2,2);
+//    double r12 = R(0,1);
+//    double r22 = R(1,1);
+//    double r31 = R(2,0);
+//    double r32 = R(2,1);
+//    double r33 = R(2,2);
 
     roll  = atan2(R(2,1), R(2,2));
     //pitch = asin(-R(2,0))

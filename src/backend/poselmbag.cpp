@@ -34,7 +34,7 @@ void PoseLMBag::reset()
 bool PoseLMBag::hasTheLM(int64_t id_in, int &idx)
 {
     idx = 0;
-    for(int i=0; i<lm_sub_bag.size(); i++)
+    for(unsigned int i=0; i<lm_sub_bag.size(); i++)
     {
         if(lm_sub_bag.at(i).id == id_in)
         {

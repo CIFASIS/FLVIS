@@ -26,9 +26,8 @@
 #include <flvis/CorrectionInf.h>
 #include <include/keyframe_msg.h>
 #include <include/correction_inf_msg.h>
-#include <include/octomap_feeder.h>
 #include <tf/transform_listener.h>
-
+//#include <include/octomap_feeder.h>
 
 namespace flvis_ns
 {
@@ -56,7 +55,7 @@ private:
     ros::Subscriber correction_inf_sub;
 
     //Octomap
-    OctomapFeeder* octomap_pub;
+    //OctomapFeeder* octomap_pub;
     //Visualization
     cv::Mat img0_vis;
     cv::Mat img1_vis;

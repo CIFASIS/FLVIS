@@ -15,14 +15,14 @@ FeatureDEM::FeatureDEM(const int image_width,
 {
     width=image_width;
     height=image_height;
-    regionWidth  = floor(width/4.0);
-    regionHeight = floor(height/4.0);
-    boundary_dis = floor(f_para(2)/2.0);
-    max_region_feature_num = f_para(0);
-    min_region_feature_num = f_para(1);
-    gftt_num = (int)f_para(3);
-    gftt_ql = (double)f_para(4);
-    gftt_dis = (int)f_para(5);
+    regionWidth  = static_cast<int>(floor(width/4.0));
+    regionHeight = static_cast<int>(floor(height/4.0));
+    boundary_dis = static_cast<int>(floor(f_para(2)/2.0));
+    max_region_feature_num = static_cast<unsigned int>(f_para(0));
+    min_region_feature_num = static_cast<unsigned int>(f_para(1));
+    gftt_num = static_cast<int>(f_para(3));
+    gftt_ql  = static_cast<double>(f_para(4));
+    gftt_dis = static_cast<int>(f_para(5));
     cout << "max_region_feature_num:" << max_region_feature_num << endl;
     cout << "min_region_feature_num:" << min_region_feature_num << endl;
     cout << "boundary_dis:" << boundary_dis << endl;
@@ -61,8 +61,8 @@ void FeatureDEM::calHarrisR(const cv::Mat& img,
                             float &R)
 {
     uchar patch[9];
-    int xx = Pt.x;
-    int yy = Pt.y;
+    int xx = static_cast<int>(Pt.x);
+    int yy = static_cast<int>(Pt.y);
     patch[0]=img.at<uchar>(cv::Point(xx-1,yy-1));
     patch[1]=img.at<uchar>(cv::Point(xx,yy-1));
     patch[2]=img.at<uchar>(cv::Point(xx+1,yy-1));
@@ -84,7 +84,7 @@ void FeatureDEM::calHarrisR(const cv::Mat& img,
     //    | XY  Y2 |
     //R = det(M)-k(trace^2(M))
     //  = X2*Y2-XY*XY  - 0.05*(X2+Y2)*(X2+Y2)
-    R = (X2*Y2)-(XY*XY) - 0.05*(X2+Y2)*(X2+Y2);
+    R = (X2*Y2)-(XY*XY) - static_cast<float>(0.05)*(X2+Y2)*(X2+Y2);
 }
 
 
@@ -99,7 +99,7 @@ void FeatureDEM::fillIntoRegion(const cv::Mat& img, const vector<cv::Point2f>& p
             cv::Point2f pt = pts.at(i);
             if (pt.x>=3 && pt.x<(width-3) && pt.y>=3 && pt.y<(height-3))
             {
-            int regionNum= 4*floor(pt.y/regionHeight) + (pt.x/regionWidth);
+            int regionNum= static_cast<int>(4*floor(pt.y/regionHeight) + (pt.x/regionWidth));
             region[regionNum].push_back(make_pair(pt,99999.0));
             }
         }
@@ -113,7 +113,7 @@ void FeatureDEM::fillIntoRegion(const cv::Mat& img, const vector<cv::Point2f>& p
             {
                 float Harris_R;
                 calHarrisR(img,pt,Harris_R);
-                int regionNum= 4*floor(pt.y/regionHeight) + (pt.x/regionWidth);
+                int regionNum= static_cast<int>(4*floor(pt.y/regionHeight) + (pt.x/regionWidth));
                 region[regionNum].push_back(make_pair(pt,Harris_R));
             }
         }
@@ -231,7 +231,7 @@ void FeatureDEM::detect(const cv::Mat& img, vector<cv::Point2f>& newPts)
         sort(regionKeyPts[i].begin(), regionKeyPts[i].end(), sortbysecdesc);
         vector<pair<cv::Point2f,float>> tmp = regionKeyPts[i];
         regionKeyPts[i].clear();
-        int count = 0;
+        unsigned int count = 0;
         for(size_t j=0; j<tmp.size(); j++)
         {
             int outSideConflictBoundary = 1;

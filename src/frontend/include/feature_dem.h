@@ -8,12 +8,13 @@
 /* Feature Detector--------Region Based FAST Detector
  *         Extractor-------ORB descriptor
  *         Match Checker---Check by ORB distance
- *  * /
+// */
 
 
 
-/* Region Based FAST Detector
- * Regions:
+/*
+ *  Region Based FAST Detector
+ *  Regions:
  *  | 0 | 1 | 2 | 3 |
  *  | 4 | 5 | 6 | 7 |
  *  | 8 | 9 | 10| 11|
@@ -21,7 +22,7 @@
  *  //Detect FAST features
  *  //Devided all features into 16 regions
  *  //For every region, select features by Harris index and boundary size
- * */
+// */
 
 using namespace std;
 
@@ -54,8 +55,8 @@ private:
   int regionWidth;
   int regionHeight;
   int boundary_dis;
-  int max_region_feature_num;
-  int min_region_feature_num;
+  unsigned int max_region_feature_num;
+  unsigned int min_region_feature_num;
   int gftt_num;
   double gftt_ql;
   int gftt_dis;

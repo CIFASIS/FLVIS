@@ -23,9 +23,9 @@ find_package( PCL REQUIRED)
 include_directories( ${PCL_INCLUDE_DIRS} )
 add_definitions( ${PCL_DEFINITIONS} )
 
-FIND_PACKAGE(octomap REQUIRED )
+#FIND_PACKAGE(octomap REQUIRED )
 #FIND_PACKAGE(octovis REQUIRED )
-INCLUDE_DIRECTORIES(${OCTOMAP_INCLUDE_DIRS})
+#INCLUDE_DIRECTORIES(${OCTOMAP_INCLUDE_DIRS})
 
 find_package(catkin REQUIRED COMPONENTS
     nodelet
@@ -71,9 +71,9 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/src/"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/backend/"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/frontend/"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/octofeeder/"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/visualization/"
+    #"${CMAKE_CURRENT_SOURCE_DIR}/src/octofeeder/"
     )
 
 
@@ -113,7 +113,7 @@ add_library(flvis
     src/utils/keyframe_msg.cpp
     src/utils/correction_inf_msg.cpp
 
-    src/octofeeder/octomap_feeder.cpp
+    #src/octofeeder/octomap_feeder.cpp
     )
 
 add_dependencies(flvis
@@ -129,8 +129,8 @@ target_link_libraries(flvis
     ${DBoW3_LIBRARIES}
     ${G2O_LIBS}
     ${PCL_LIBRARIES}
-    ${OCTOMAP_LIBRARIES}
     ${Boost_SYSTEM_LIBRARY}
+    #${OCTOMAP_LIBRARIES}
     )
 
 #independent modules
@@ -140,8 +140,3 @@ add_executable(vo_repub_rec
 target_link_libraries(vo_repub_rec
     ${catkin_LIBRARIES})
 
-#2 output to files
-#add_executable(w2files
-#    src/independ_modules/w2files.cpp)
-#target_link_libraries(w2files
-#    ${catkin_LIBRARIES})
