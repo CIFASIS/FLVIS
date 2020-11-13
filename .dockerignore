@@ -1,0 +1,11 @@
+Dockerfile
+.dockerignore
+README.md
+.git/*
+launch/*
+3rdPartLib/DBoW2/build/*
+3rdPartLib/g2o/build/*
+3rdPartLib/Sophus/build/*
+3rdPartLib/yaml-cpp-0.6.2/build/*
+outputs/*
+run*
