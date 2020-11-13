@@ -107,3 +107,26 @@ roslaunch flvis flvis_euroc_mav.launch
 ### Maintainer:
 [Shengyang Chen](https://www.polyu.edu.hk/researchgrp/cywen/index.php/en/people/researchstudent.html)(Dept.ME,PolyU): shengyang.chen@connect.polyu.hk <br />
 Yajing Zou(Dept.LSGI,PolyU):rick.zou@connect.polyu.hk
+
+
+### Docker and testing on the Rosario Dataset
+
+Being in the FLVIS directory, to build the image execute this:
+
+```
+docker build --rm --tag ros:flvis .
+```
+
+To run on the Rosario dataset:
+
+```bash
+docker run --rm -it --net=host -v "`pwd`/launch:/root/catkin_ws/src/FLVIS/launch:ro" ros:flvis roslaunch flvis flvis_rosario.launch
+```
+
+Then launch visualization (`rviz -d rviz/vio.rviz &`) and play some sequence (`rosbag play --pause --clock path/to/sequence04.bag`).
+
+To visualize the output after, it is neccesary to record the odometry topic (using [`pose_listener`](https://github.com/jcremona/pose_listener) it would be `rosrun pose_listener pose_listener _topic:=/imu_odom _type:=O`). Then it can be plotted with [evo](https://github.com/MichaelGrupp/evo):
+
+```bash
+evo_traj tum trajectory.txt --plot
+```
