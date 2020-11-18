@@ -82,21 +82,21 @@ if [ -z "$SOME_OPT" ]; then
 fi
 
 if [ $DEV_MODE -eq 1 ] ; then
-  docker run --rm -it --net=host -v $CURRENT_DIR:/root/catkin_ws/src/FLVIS/ ros:flvis /bin/bash
+  docker run --rm -it --net=host -v $CURRENT_DIR:/root/catkin_ws/src/FLVIS/ flvis:ros_kinetic /bin/bash
 fi
 
 if [ $VIS_MODE -eq 1 ] ; then
   if [ $DETACHED -eq 1 ] ; then
     docker run -d --net=host \
-      -v $CURRENT_DIR/launch:/root/catkin_ws/src/FLVIS/launch:ro ros:flvis \
+      -v $CURRENT_DIR/launch:/root/catkin_ws/src/FLVIS/launch:ro flvis:ros_kinetic \
       roslaunch flvis $LAUNCH_FILE
   else
     docker run --net=host \
-      -v $CURRENT_DIR/launch:/root/catkin_ws/src/FLVIS/launch:ro ros:flvis \
+      -v $CURRENT_DIR/launch:/root/catkin_ws/src/FLVIS/launch:ro flvis:ros_kinetic \
       roslaunch flvis $LAUNCH_FILE
   fi
 fi
 
 if [ $BUILD -eq 1 ] ; then
-  docker build --rm -t ros:flvis $CURRENT_DIR
+  docker build --rm -t flvis:ros_kinetic $CURRENT_DIR
 fi

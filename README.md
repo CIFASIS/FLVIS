@@ -114,13 +114,13 @@ Yajing Zou(Dept.LSGI,PolyU):rick.zou@connect.polyu.hk
 Being in the FLVIS directory, to build the image execute this:
 
 ```
-docker build --rm --tag ros:flvis .
+docker build --rm --tag flvis:ros_kinetic .
 ```
 
 To run on the Rosario dataset:
 
 ```bash
-docker run --rm -it --net=host -v "`pwd`/launch:/root/catkin_ws/src/FLVIS/launch:ro" ros:flvis roslaunch flvis flvis_rosario.launch
+docker run --rm -it --net=host -v "`pwd`/launch:/root/catkin_ws/src/FLVIS/launch:ro" flvis:ros_kinetic roslaunch flvis flvis_rosario.launch
 ```
 
 Then launch visualization (`rviz -d rviz/vio.rviz &`) and play some sequence (`rosbag play --pause --clock path/to/sequence04.bag`).
