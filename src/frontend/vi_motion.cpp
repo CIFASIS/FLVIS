@@ -29,6 +29,8 @@ VIMOTION::VIMOTION(SE3 T_i_c_fromCalibration,
   this->para_4=para_4_in;
   this->ba_sat=para_5_in;
   this->bw_sat=para_6_in;
+
+  this->considered_frames_count = 0;
 }
 
 void VIMOTION::viIMUinitialization(const IMUSTATE imu_read,
@@ -330,6 +332,7 @@ void VIMOTION::viCorrectionFromVision(const double t_curr, const SE3 Tcw_curr,
     //correct
     //        cout << "acc_bias : " << acc_bias.transpose().format(CleanFmt) << endl;
     //        cout << "gyro_bias: " << gyro_bias.transpose().format(CleanFmt) << endl;
+    cout << "considered_frames_count: " << ++considered_frames_count << endl;
   }
   else
   {
