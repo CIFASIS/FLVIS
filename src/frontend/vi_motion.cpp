@@ -30,6 +30,7 @@ VIMOTION::VIMOTION(SE3 T_i_c_fromCalibration,
   this->ba_sat=para_5_in;
   this->bw_sat=para_6_in;
 
+  this->image_processed = false;
   this->considered_frames_count = 0;
 }
 

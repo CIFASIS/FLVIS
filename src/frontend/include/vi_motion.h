@@ -32,6 +32,8 @@ public:
     Vec3 gravity;
     std::deque<MOTION_STATE> states;
     std::mutex mtx_states_RW;
+    std::mutex mtx_image_processed;
+    bool image_processed;
     size_t considered_frames_count;
 
     MOTION_STATE init_state;

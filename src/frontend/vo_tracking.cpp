@@ -28,6 +28,7 @@
 #include <include/correction_inf_msg.h>
 #include <tf/transform_listener.h>
 //#include <include/octomap_feeder.h>
+#include "include/timestamps_logger.h"
 
 namespace flvis_ns
 {
@@ -39,7 +40,7 @@ enum TYPEOFIMU{D435I,
 class TrackingNodeletClass : public nodelet::Nodelet
 {
 public:
-    TrackingNodeletClass()  {;}
+    TrackingNodeletClass() : input("input.csv"), output("output.csv") {;}
     ~TrackingNodeletClass() {;}
 private:
     bool is_lite_version;
@@ -72,6 +73,7 @@ private:
     KeyFrameMsg* kf_pub;
     tf::StampedTransform tranOdomMap;
     tf::TransformListener listenerOdomMap;
+    TimestampsLogger input, output;
 
     virtual void onInit()
     {
@@ -223,6 +225,7 @@ private:
 
     void imu_callback(const sensor_msgs::ImuConstPtr& msg)
     {
+        //cout << "********** imu_callback BEGIN **********" << endl;
         //SETP1: TO ENU Frame
         Vec3 acc,gyro;
         ros::Time tstamp = msg->header.stamp;
@@ -266,6 +269,13 @@ private:
         pose_imu_pub->pubPose(q_w_i,pos_w_i,tstamp);
         odom_imu_pub->pubOdom(q_w_i,pos_w_i,vel_w_i,tstamp);
         imu_path_pub->pubPathT_w_c(SE3(q_w_i,pos_w_i),tstamp);
+        this->cam_tracker->vimotion->mtx_image_processed.lock();
+        if (this->cam_tracker->vimotion->image_processed) {
+            this->cam_tracker->vimotion->image_processed = false;
+            output.Log();
+        }
+        this->cam_tracker->vimotion->mtx_image_processed.unlock();
+        //cout << "********** imu_callback END **********" << endl;
     }
 
     void correction_feedback_callback(const flvis::CorrectionInf::ConstPtr& msg)
@@ -285,6 +295,8 @@ private:
     void image_input_callback(const sensor_msgs::ImageConstPtr & img0_Ptr,
                               const sensor_msgs::ImageConstPtr & img1_Ptr)
     {
+        //cout << "********** image_input_callback BEGIN **********" << endl;
+        input.Log();
         //tic_toc_ros tt_cb;
         ros::Time tstamp = img0_Ptr->header.stamp;
 
@@ -341,6 +353,7 @@ private:
             img0_pub.publish(img0_msg);
             img1_pub.publish(img1_msg);
         }
+        //cout << "********** image_input_callback END **********" << endl;
     }//image_input_callback(const sensor_msgs::ImageConstPtr & imgPtr, const sensor_msgs::ImageConstPtr & depthImgPtr)
 
 };//class TrackingNodeletClass

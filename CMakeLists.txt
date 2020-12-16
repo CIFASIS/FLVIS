@@ -6,6 +6,10 @@ add_definitions(-std=c++11)
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -O3 -Wall -pthread") # -Wextra -Werror
 set(CMAKE_BUILD_TYPE "RELEASE")
 
+option(LOG_TRACKING_TIMESTAMPS         "Enable option to save tracking times" OFF)
+if( LOG_TRACKING_TIMESTAMPS )
+   add_definitions(-DLOG_TRACKING_TIMESTAMPS)
+endif()
 
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rdPartLib/g2o/cmake_modules)
 set(G2O_ROOT /usr/local/include/g2o)
