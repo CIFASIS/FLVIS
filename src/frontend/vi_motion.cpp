@@ -334,6 +334,9 @@ void VIMOTION::viCorrectionFromVision(const double t_curr, const SE3 Tcw_curr,
     //        cout << "acc_bias : " << acc_bias.transpose().format(CleanFmt) << endl;
     //        cout << "gyro_bias: " << gyro_bias.transpose().format(CleanFmt) << endl;
     cout << "considered_frames_count: " << ++considered_frames_count << endl;
+    mtx_image_processed.lock();
+    image_processed = true;
+    mtx_image_processed.unlock();
   }
   else
   {

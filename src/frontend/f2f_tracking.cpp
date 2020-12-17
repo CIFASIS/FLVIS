@@ -302,9 +302,6 @@ void F2FTracking::image_feed(const double time,
                                              last_frame->frame_time,
                                              curr_frame->T_c_w,
                                              mean_reprojection_error);
-            vimotion->mtx_image_processed.lock();
-            vimotion->image_processed = true;
-            vimotion->mtx_image_processed.unlock();
         }
 
         //STEP5: Redetect
